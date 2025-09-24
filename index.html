@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Team Submission App</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+{
+  "name": "team-submission-webapp",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.0.0",
+    "vite": "^4.4.0"
+  }
+}
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.jsx";
+import "./index.css";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+import React, { useState } from "react";
+
+export default function App() {
+  const [user, setUser] = useState(null);
+  const [task, setTask] = useState("");
+  const [submissions, setSubmissions] = useState([]);
+
+  const login = (role) => setUser({ role });
+
+  const submitTask = () => {
+    setSubmissions([...submissions, { user: user.role, task }]);
+    setTask("");
+  };
+
+  if (!user) {
+    return (
+      <div style={{ textAlign: "center", marginTop: "50px" }}>
+        <h2>Login</h2>
+        <button onClick={() => login("admin")}>Login as Admin</button>
+        <button onClick={() => login("member")}>Login as Member</button>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ padding: "20px" }}>
+      <h2>Welcome {user.role}</h2>
+
+      {user.role === "member" && (
+        <div>
+          <input
+            value={task}
+            onChange={(e) => setTask(e.target.value)}
+            placeholder="Enter your task"
+          />
+          <button onClick={submitTask}>Submit</button>
+        </div>
+      )}
+
+      {user.role === "admin" && (
+        <div>
+          <h3>Submissions</h3>
+          <ul>
+            {submissions.map((s, i) => (
+              <li key={i}>
+                {s.user}: {s.task}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+body {
+  font-family: Arial, sans-serif;
+  background: #f7f7f7;
+  margin: 0;
+  padding: 0;
+}
+button {
+  margin: 5px;
+  padding: 8px 12px;
+  background: black;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+input {
+  padding: 6px;
+  margin-right: 8px;
+}
